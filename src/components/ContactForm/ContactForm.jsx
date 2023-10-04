@@ -19,7 +19,7 @@ class ContactForm extends Component {
     const { name, number } = this.state;
 
     if (name.trim() === '' || number.trim() === '') {
-      return; // Nie dodawaj pustych kontaktów
+      return; 
     }
 
     const isDuplicateName = this.props.contacts.some(
