@@ -1,40 +1,53 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import ContactList from './ContactList/ContactList';
 import ContactForm from './ContactForm/ContactForm';
 import Filter from './Filter/Filter';
 
-export const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
-
-  const addContact = newContact => {
-    setContacts([...contacts, newContact]);
+class App extends Component {
+  state = {
+    contacts: [],
+    filter: ''
   };
 
-  const deleteContact = contactId => {
-    setContacts(contacts.filter(contact => contact.id !== contactId));
+  addContact = newContact => {
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, newContact]
+    }));
   };
 
-  const handleFilterChange = e => {
-    setFilter(e.target.value);
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId)
+    }));
   };
 
-  const filteredContacts = () => {
+  handleFilterChange = e => {
+    this.setState({ filter: e.target.value });
+  };
+
+  filteredContacts = () => {
+    const { contacts, filter } = this.state;
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
   };
 
-  return (
-    <div>
-      <h1>Phonebook</h1>
-      <ContactForm contacts={contacts} addContact={addContact} />
-      <h2>Contacts</h2>
-      <Filter filter={filter} handleFilterChange={handleFilterChange} />
-      <ContactList
-        contacts={filteredContacts()}
-        deleteContact={deleteContact}
-      />
-    </div>
-  );
-};
+  render() {
+    const { filter } = this.state;
+
+    return (
+      <div>
+        <h1>Phonebook</h1>
+        <ContactForm contacts={this.state.contacts} addContact={this.addContact} />
+        <h2>Contacts</h2>
+        <Filter filter={filter} handleFilterChange={this.handleFilterChange} />
+        <ContactList
+          contacts={this.filteredContacts()}
+          deleteContact={this.deleteContact}
+        />
+      </div>
+    );
+  }
+}
+
+export default App;
